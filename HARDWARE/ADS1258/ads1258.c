@@ -31,7 +31,7 @@
 #define ADS1258_DOUT_PIN        PBout(14)
 /* SPI-> 输入接口 对应SPI MOSI*/
 #define ADS1258_DIN_PIN         PBout(15)
-/* 时钟选择引脚，低电平：采用外部时钟晶振32.768KHz */
+/* 时钟选择引脚，低电平：采用外部时钟晶振32.768KHz 2^15 */
 #define ADS1258_CLKSEL_PIN      PBout(9)
 // 复位引脚
 #define ADS1258_RESET_PIN       PBout(8)
@@ -63,14 +63,14 @@ void ads1258_gpio_config(void)
 
     /* 初始化IO 口 ，SPI IO口在SPI已经定义 */
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;  //PB13/14/15复用推挽输出 
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;  //推挽输出 
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOB, &GPIO_InitStructure);//初始化GPIOB
-    ADS1258_CS_PIN = 1;
-    ADS1258_CLKSEL_PIN = 0;
+    ADS1258_CS_PIN = 1;//默认不选中
+    ADS1258_CLKSEL_PIN = 0;//使用 ADC 内部时钟
     ADS1258_RESET_PIN = 1;
-    ADS1258_PWDN_PIN = 1;
-    ADS1258_START_PIN = 0;
+    ADS1258_PWDN_PIN = 1;//退出掉电，上电工作
+    ADS1258_START_PIN = 0;//默认不启动 ADC 转换
 }
 
 void ads1258_spi_config(void)
@@ -83,9 +83,9 @@ void ads1258_spi_config(void)
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;  //PB13/14/15复用推挽输出 
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOB, &GPIO_InitStructure);//初始化GPIOB
-	// MISO 单独配置为输入浮空（或上拉）
+	// MISO 单独配置为浮空输入（或上拉）
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_14;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING; // 或 GPIO_Mode_IPU if you want pull-up
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING; // 或 GPIO_Mode_IPU
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
 	GPIO_SetBits(GPIOB,GPIO_Pin_13|GPIO_Pin_14|GPIO_Pin_15);  //PB13/14/15上拉	
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12;
@@ -97,7 +97,7 @@ void ads1258_spi_config(void)
 	SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low;		//串行同步时钟的空闲状态为低电平
 	SPI_InitStructure.SPI_CPHA = SPI_CPHA_1Edge;	//串行同步时钟的第二个跳变沿（上升或下降）数据被采样
 	SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;		//NSS信号由硬件（NSS管脚）还是软件（使用SSI位）管理:内部NSS信号有SSI位控制
-	SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_4;		//定义波特率预分频的值:波特率预分频值为256
+	SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_8;		//定义波特率预分频的值:波特率预分频值为256
 	SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;	//指定数据传输从MSB位还是LSB位开始:数据传输从MSB位开始
 	//SPI_InitStructure.SPI_CRCPolynomial = 7;	//CRC值计算的多项式
 	SPI_Init(SPI2, &SPI_InitStructure);  //根据SPI_InitStruct中指定的参数初始化外设SPIx寄存器
@@ -168,7 +168,7 @@ void ads_config(void)
 	{
 		0x70,   // Command: Write Multiple, start at 00h
 		0x06,   // 00h CONFIG0
-		0x01,   // 01h CONFIG1
+		0x00,   // 01h CONFIG1
 		0x00,   // 02h MUXSCH
 		0x00,   // 03h MUXDIF
 		0xFE,   // 04h MUXSG0
@@ -260,14 +260,10 @@ uint8_t REG_readdata(void)
     ADS1258_CS_PIN = 0;//CS拉低
     delay_us(2);
     //连续读取4 Byte,发送0x00作为dummy
-    REG_recdata[0] =
-        SPI2_ReadWriteByte(0x00);
-    REG_recdata[1] =
-        SPI2_ReadWriteByte(0x00);
-    REG_recdata[2] =
-        SPI2_ReadWriteByte(0x00);
-    REG_recdata[3] =
-        SPI2_ReadWriteByte(0x00);
+    REG_recdata[0] = SPI2_ReadWriteByte(0x00);
+    REG_recdata[1] = SPI2_ReadWriteByte(0x00);
+    REG_recdata[2] = SPI2_ReadWriteByte(0x00);
+    REG_recdata[3] = SPI2_ReadWriteByte(0x00);
     delay_us(2);
     ADS1258_CS_PIN = 1;
     Status_byte = REG_recdata[0];//解析Status

@@ -97,7 +97,7 @@ I (..\STM32F10x_FWLib\inc\stm32f10x_tim.h)(0x68B95244)
 I (..\STM32F10x_FWLib\inc\stm32f10x_usart.h)(0x68B95244)
 I (..\STM32F10x_FWLib\inc\stm32f10x_wwdg.h)(0x68B95244)
 I (..\STM32F10x_FWLib\inc\misc.h)(0x68B95244)
-F (..\HARDWARE\ADS1258\ads1258.c)(0x6A7C0771)(--c99 -c --cpu Cortex-M3 -g -O0 --apcs=interwork --split_sections -I ..\CORE -I ..\HARDWARE\BEEP -I ..\HARDWARE\KEY -I ..\HARDWARE\LED -I ..\STM32F10x_FWLib\inc -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\USER -I ..\HARDWARE\ADS1258 -I ..\HARDWARE\LCD-ID:\keil\Keil32\STM32F1xx_DFP\2.3.0\Device\Include-ID:\keil\ARM\CMSIS\Include-D__UVISION_VERSION="531" -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\obj\ads1258.o --omf_browse ..\obj\ads1258.crf --depend ..\obj\ads1258.d)
+F (..\HARDWARE\ADS1258\ads1258.c)(0x6A85A3B7)(--c99 -c --cpu Cortex-M3 -g -O0 --apcs=interwork --split_sections -I ..\CORE -I ..\HARDWARE\BEEP -I ..\HARDWARE\KEY -I ..\HARDWARE\LED -I ..\STM32F10x_FWLib\inc -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\USER -I ..\HARDWARE\ADS1258 -I ..\HARDWARE\LCD-ID:\keil\Keil32\STM32F1xx_DFP\2.3.0\Device\Include-ID:\keil\ARM\CMSIS\Include-D__UVISION_VERSION="531" -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\obj\ads1258.o --omf_browse ..\obj\ads1258.crf --depend ..\obj\ads1258.d)
 I (..\HARDWARE\ADS1258\ads1258.h)(0x6A7C025C)
 I (..\SYSTEM\sys\sys.h)(0x68B95244)
 I (..\USER\stm32f10x.h)(0x68B95244)
